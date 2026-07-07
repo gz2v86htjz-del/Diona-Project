@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" width="220" height="90">
+  <g fill="#0b5fae">
+    <circle cx="26" cy="24" r="13"/>
+    <circle cx="52" cy="20" r="10"/>
+    <circle cx="14" cy="46" r="9"/>
+    <path d="M4 66c0-14 10-24 22-24s22 10 22 24z"/>
+    <path d="M32 66c0-16 10-28 24-28s24 12 24 28z"/>
+  </g>
+  <text x="72" y="30" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" fill="#0b5fae">WCB</text>
+  <text x="72" y="47" font-family="Georgia, serif" font-style="italic" font-size="13.5" fill="#1a1a1a">Workers Compensation</text>
+  <text x="72" y="62" font-family="Georgia, serif" font-style="italic" font-size="13.5" fill="#1a1a1a">Board of Manitoba</text>
+</svg>

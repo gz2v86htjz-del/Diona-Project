@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Worker Progress Report — WCB</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+
+<div class="toolbar">
+  <a class="back-link" href="../index.html">&larr; Back to menu</a>
+  <span class="toolbar-title">Worker Progress Report — demo controls</span>
+  <select id="sampleSelect">
+    <option value="">Load sample data…</option>
+    <option value="A">Sample A — Madeleine Willson (as in source PDF)</option>
+    <option value="B">Sample B — Different worker, still recovering</option>
+  </select>
+  <button id="printBtn" class="primary">Print / Save as PDF</button>
+</div>
+
+<div class="sheet-stack" id="sheetStack">
+
+  <!-- ============================= SHEET 1 ============================= -->
+  <section class="sheet" id="sheet1">
+    <div class="doc-header">
+      <div class="brand">
+        <img src="../assets/img/logo.svg" alt="Workers Compensation Board of Manitoba logo">
+        <div class="brand-address">
+          333 Broadway<br>
+          Winnipeg, MB R3C 4W3<br>
+          Phone: (204) 954-4321<br>
+          Toll Free: 1-855-954-4321<br>
+          wcb.mb.ca
+        </div>
+      </div>
+      <div class="doc-title-block">
+        <h1>Worker Progress Report</h1>
+        <div class="claim-row">
+          <div class="claim-box">Claim No. <strong id="claimNo">20042047</strong></div>
+          <div class="claim-box tag">WP</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="intro-line"><span class="worker-name" id="workerName">Madeleine Willson</span> provided the following updates in relation to their claim:</p>
+
+    <h2 class="section-title">Return to Work</h2>
+
+    <div class="field-box">
+      <div class="box-label">Select one:</div>
+      <div class="option-row">
+        <span class="option">
+          <input type="radio" id="rtw_notmissed" name="rtw" value="not_missed">
+          <label for="rtw_notmissed">I have not missed time from work</label>
+        </span>
+        <span class="option">
+          <input type="radio" id="rtw_notreturned" name="rtw" value="not_returned">
+          <label for="rtw_notreturned">I have not returned to work</label>
+        </span>
+        <span class="option">
+          <input type="radio" id="rtw_returned" name="rtw" value="returned" data-reveals="rtwDate">
+          <label for="rtw_returned">I returned to work on:</label>
+          <span class="underline-field-wrap">
+            <input type="date" id="rtwDate" class="inline-input" disabled>
+            <span class="field-caption">Date</span>
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <div class="field-box">
+      <div class="box-label">I am working:</div>
+      <div class="option-row">
+        <span class="option"><input type="radio" id="wk_full_reg" name="working"><label for="wk_full_reg">Full duties, regular hours</label></span>
+        <span class="option"><input type="radio" id="wk_full_red" name="working"><label for="wk_full_red">Full duties, reduced hours</label></span>
+        <span class="option"><input type="radio" id="wk_mod_reg" name="working"><label for="wk_mod_reg">Modified duties, regular hours</label></span>
+        <span class="option"><input type="radio" id="wk_mod_red" name="working"><label for="wk_mod_red">Modified duties, reduced hours</label></span>
+        <span class="option"><input type="radio" id="wk_other" name="working" data-reveals="wkOtherText"><label for="wk_other">Other:</label>
+          <input type="text" id="wkOtherText" class="inline-input" style="min-width:220px" disabled>
+        </span>
+      </div>
+    </div>
+
+    <div class="textbox">
+      <span class="placeholder-label">My return to work is going:</span>
+      <textarea id="rtwGoing" placeholder="Describe how the return to work is going…"></textarea>
+    </div>
+
+    <div class="plain-line">
+      I expect to return to work on:
+      <span class="underline-field-wrap">
+        <input type="date" id="expectReturnDate" class="fill-line">
+        <span class="cap">Date</span>
+      </span>
+    </div>
+
+    <div class="textbox">
+      <span class="placeholder-label">I have the following concerns about returning to work:</span>
+      <textarea id="rtwConcerns" placeholder="List any concerns…"></textarea>
+    </div>
+
+    <div class="plain-line">
+      I was most recently in contact with:
+      <input type="text" id="contactName" class="fill-line" placeholder="Employer contact name">
+      on
+      <input type="date" id="contactDate" class="fill-line" style="min-width:150px">
+    </div>
+
+    <h2 class="section-title">Recovery</h2>
+    <div class="field-box">
+      <div class="box-label">Select one:</div>
+      <div class="option-row">
+        <span class="option"><input type="radio" id="rec_notfull" name="recovery"><label for="rec_notfull">I have not fully recovered from my workplace injury.</label></span>
+        <span class="option"><input type="radio" id="rec_full" name="recovery"><label for="rec_full">I have fully recovered from my workplace injury.</label></span>
+      </div>
+    </div>
+
+    <div class="textbox">
+      <span class="placeholder-label">I have provided the following comments about my recovery:</span>
+      <textarea id="recoveryComments" placeholder="Comments about recovery…"></textarea>
+    </div>
+
+    <div class="doc-footer">
+      <div><span class="worker-app-id-value" id="wid1">712041</span> &nbsp;(Worker App ID)</div>
+      <div class="footer-right">
+        Submitted: <span class="submitted-value">March 19, 2024 19:21</span>
+        <span class="page-num">Page 1 of 3</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= SHEET 2 ============================= -->
+  <section class="sheet" id="sheet2">
+    <div class="doc-header">
+      <div class="brand">
+        <img src="../assets/img/logo.svg" alt="">
+        <div class="brand-address">
+          333 Broadway<br>Winnipeg, MB R3C 4W3<br>Phone: (204) 954-4321<br>Toll Free: 1-855-954-4321<br>wcb.mb.ca
+        </div>
+      </div>
+      <div class="doc-title-block">
+        <h1>Worker Progress Report</h1>
+        <div class="claim-row">
+          <div class="claim-box">Claim No. <strong class="claimNoEcho">20042047</strong></div>
+          <div class="claim-box tag">WP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-box">
+      <div class="box-label">I rate my current pain/discomfort on a scale of 1–10, where 1 is no pain and 10 is severe pain.</div>
+      <div class="pain-scale" id="painScale">
+        <!-- generated by JS: 10 radio options -->
+      </div>
+    </div>
+
+    <div class="field-box">
+      <div class="box-label">Select one:</div>
+      <div class="option-row">
+        <span class="option"><input type="radio" id="med_no" name="medtreat"><label for="med_no">I am not continuing to receive medical treatment for my workplace injury.</label></span>
+        <span class="option"><input type="radio" id="med_yes" name="medtreat" data-reveals="medProviderType"><label for="med_yes">I am continuing to receive medical treatment for my workplace injury from:</label>
+          <input type="text" id="medProviderType" class="inline-input" placeholder="Medical Provider Type" disabled style="min-width:200px">
+        </span>
+      </div>
+    </div>
+
+    <div class="plain-line" style="flex-direction:column;align-items:flex-start;gap:4px;">
+      <div>My last medical treatment was from</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;">
+        <span class="underline-field-wrap"><input type="date" id="lastTreatDate" class="fill-line"><span class="cap">Date</span></span>
+        <span class="underline-field-wrap"><input type="text" id="lastTreatName" class="fill-line"><span class="cap">Medical Provider Name</span></span>
+      </div>
+    </div>
+
+    <div class="plain-line" style="flex-direction:column;align-items:flex-start;gap:4px;">
+      <div>My next medical treatment is from</div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;">
+        <span class="underline-field-wrap"><input type="date" id="nextTreatDate" class="fill-line"><span class="cap">Date</span></span>
+        <span class="underline-field-wrap"><input type="text" id="nextTreatName" class="fill-line"><span class="cap">Medical Provider Name</span></span>
+      </div>
+    </div>
+
+    <div class="plain-line">
+      I am attending a Chiropractor or Physiotherapist
+      <input type="text" id="chiroFrequency" class="fill-line" placeholder="Frequency">
+    </div>
+
+    <div class="field-box">
+      <div class="box-label">Select one:</div>
+      <div class="option-row">
+        <span class="option"><input type="radio" id="ex_no" name="exercise"><label for="ex_no">I am not doing home exercises for my workplace injury.</label></span>
+        <span class="option"><input type="radio" id="ex_yes" name="exercise" data-reveals="exerciseList"><label for="ex_yes">I am doing home exercises for my workplace injury.</label></span>
+      </div>
+    </div>
+    <div class="textbox small">
+      <span class="placeholder-label">List the exercises you are doing:</span>
+      <textarea id="exerciseList" placeholder="e.g. Shoulder stretches, twice daily" disabled></textarea>
+    </div>
+
+    <h2 class="section-title">Other Information</h2>
+    <div class="textbox">
+      <span class="placeholder-label">I would like to provide the following additional information about my claim/injury:</span>
+      <textarea id="otherInfo" placeholder="Additional information…"></textarea>
+    </div>
+
+    <div class="doc-footer">
+      <div><span class="worker-app-id-value">712041</span> &nbsp;(Worker App ID)</div>
+      <div class="footer-right">
+        Submitted: <span class="submitted-value">March 19, 2024 19:21</span>
+        <span class="page-num">Page 2 of 3</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= SHEET 3 ============================= -->
+  <section class="sheet" id="sheet3">
+    <div class="doc-header">
+      <div class="brand">
+        <img src="../assets/img/logo.svg" alt="">
+        <div class="brand-address">
+          333 Broadway<br>Winnipeg, MB R3C 4W3<br>Phone: (204) 954-4321<br>Toll Free: 1-855-954-4321<br>wcb.mb.ca
+        </div>
+      </div>
+      <div class="doc-title-block">
+        <h1>Worker Progress Report</h1>
+        <div class="claim-row">
+          <div class="claim-box">Claim No. <strong class="claimNoEcho">20042047</strong></div>
+          <div class="claim-box tag">WP</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-box">
+      <div class="box-label">Select one:</div>
+      <div class="option-row">
+        <span class="option"><input type="radio" id="rx_no" name="medication"><label for="rx_no">I am not taking medication for my workplace injury.</label></span>
+        <span class="option"><input type="radio" id="rx_yes" name="medication" data-reveals="medicationName"><label for="rx_yes">I am taking medication for my workplace injury:</label>
+          <input type="text" id="medicationName" class="inline-input" placeholder="Name of prescribed medication" disabled style="min-width:220px">
+        </span>
+      </div>
+    </div>
+
+    <p class="certify-text">
+      I certify that the information given on this form is true, correct and complete to the best of my
+      knowledge. I agree to notify the Workers Compensation Board of Manitoba (WCB) immediately once I
+      return to any form of work and/or employment. I understand that it is an offence to knowingly make
+      a false statement to the WCB. I also understand that it is an offence to withhold information from
+      WCB which affects my entitlement to compensation (e.g., full or partial recovery from injury, ability
+      to return to work, sources of additional income, etc.). I understand that refusing to co-operate with,
+      or follow my treatment, may result in the WCB reducing or suspending my benefits.
+    </p>
+
+    <div class="privacy-row">
+      <input type="checkbox" id="privacyAckWP">
+      <label for="privacyAckWP">I understand that the <a href="#" onclick="return false;">Privacy Notice</a> applies to the personal information collected in this document.</label>
+    </div>
+
+    <div class="doc-footer">
+      <div><span class="worker-app-id-value">712041</span> &nbsp;(Worker App ID)</div>
+      <div class="footer-right">
+        Submitted: <span class="submitted-value">March 19, 2024 19:21</span>
+        <span class="page-num">Page 3 of 3</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script src="../assets/js/common.js"></script>
+<script src="../assets/js/worker-progress.js"></script>
+</body>
+</html>
