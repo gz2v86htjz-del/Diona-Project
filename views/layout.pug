@@ -1,0 +1,41 @@
+//- ================================================================
+//- layout.pug
+//- Base page shell shared by index.pug, worker-progress.pug and
+//- medical-travel.pug. Only the pieces that actually differ between
+//- pages are exposed as blocks/locals:
+//-   pageTitle     -> <title>
+//-   toolbarTitle  -> text shown in the toolbar (omit toolbar entirely
+//-                    on pages that don't set it, e.g. the landing page)
+//-   samplePath    -> base route used to build the Sample A / Sample B
+//-                    switch links (e.g. "/worker-progress")
+//-   activeSample  -> 'A' or 'B', used only to highlight the active link
+//- ================================================================
+doctype html
+html(lang="en")
+  head
+    meta(charset="UTF-8")
+    title= pageTitle || 'WCB Forms Demo'
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    link(rel="stylesheet" href="/css/style.css")
+  body
+    if toolbarTitle
+      .toolbar
+        a.back-link(href="/") ← Back to menu
+        span.toolbar-title= toolbarTitle
+
+        if samplePath
+          .sample-switch
+            span.sample-switch-label Simulated backend record:
+            a.sample-btn(href=`${samplePath}?sample=A` class=activeSample === 'A' ? 'active' : null) Sample A
+            a.sample-btn(href=`${samplePath}?sample=B` class=activeSample === 'B' ? 'active' : null) Sample B
+
+        if formId
+          button#saveBtn.primary(type="submit" form=formId) Save
+        button#printBtn.primary(type="button") Print / Save as PDF
+
+      if saved
+        .save-message Saved successfully. You can now print or continue editing.
+
+    block content
+
+    script(src="/js/print.js")

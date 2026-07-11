@@ -1,0 +1,41 @@
+{
+  "_comment": "Simulated backend records for the Medical & Travel Expense Request form. Sample A mirrors the source PDF (light, 1 row per table). Sample B is a heavier claim with several multi-row tables plus one intentionally empty table, used to prove the print layout adapts to however much data a real claim would have.",
+  "A": {
+    "claimNo": "20042047",
+    "workerName": "Madeleine Willson",
+    "workerAppId": "712041",
+    "submitted": "March 28, 2024 20:43",
+    "privacyAck": true,
+    "rows": {
+      "rx": [
+        {
+          "amount": "15.00",
+          "purchDate": "2024-05-02",
+          "drug": "Ibuprofen",
+          "provider": "Dr. Save",
+          "prescDate": "2024-05-01"
+        }
+      ],
+      "otc": [],
+      "supplies": [],
+      "parking": [],
+      "mileage": [],
+      "fare": []
+    }
+  },
+  "B": {
+    "claimNo": "20055391",
+    "workerName": "Andre Fontaine",
+    "workerAppId": "698214",
+    "submitted": "July 5, 2026 11:02",
+    "privacyAck": false,
+    "rows": {
+      "rx": [],
+      "otc": [],
+      "supplies": [],
+      "parking": [],
+      "mileage": [],
+      "fare": []
+    }
+  }
+}

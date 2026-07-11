@@ -1,0 +1,111 @@
+extends layout
+include mixins/mixins.pug
+
+block content
+  form#claimForm(action="/worker-progress/save" method="post")
+    input(type="hidden" name="sample" value=activeSample)
+    .sheet-stack
+
+      //- ============================= SHEET 1 =============================
+      section.sheet
+        +docHeader('Worker Progress Report', claim.claimNo, 'WP')
+
+        p.intro-line
+          span.worker-name= claim.workerName
+          |  provided the following updates in relation to their claim:
+
+        h2.section-title Return to Work
+
+        +fieldBox('Select one:')
+          +radioOption('rtw_notmissed', 'rtw', 'not_missed', 'I have not missed time from work', claim.rtw === 'not_missed')
+          +radioOption('rtw_notreturned', 'rtw', 'not_returned', 'I have not returned to work', claim.rtw === 'not_returned')
+          +radioOption('rtw_returned', 'rtw', 'returned', 'I returned to work on:', claim.rtw === 'returned', { type: 'date', name: 'rtwDate', value: claim.rtwDate })
+
+        +fieldBox('I am working:')
+          +radioOption('wk_full_reg', 'working', 'wk_full_reg', 'Full duties, regular hours', claim.working === 'wk_full_reg')
+          +radioOption('wk_full_red', 'working', 'wk_full_red', 'Full duties, reduced hours', claim.working === 'wk_full_red')
+          +radioOption('wk_mod_reg', 'working', 'wk_mod_reg', 'Modified duties, regular hours', claim.working === 'wk_mod_reg')
+          +radioOption('wk_mod_red', 'working', 'wk_mod_red', 'Modified duties, reduced hours', claim.working === 'wk_mod_red')
+          +radioOption('wk_other', 'working', 'wk_other', 'Other:', claim.working === 'wk_other', { type: 'text', name: 'workingOther', value: claim.workingOther, placeholder: 'Other details', width: '220px' })
+
+        +textBox('My return to work is going:', claim.rtwGoing, 'rtwGoing')
+
+        .plain-line
+          | I expect to return to work on:
+          +dateField(claim.expectReturnDate, 'Date', 'expectReturnDate')
+
+        +textBox('I have the following concerns about returning to work:', claim.rtwConcerns, 'rtwConcerns')
+
+        .plain-line
+          | I was most recently in contact with:
+          +textField(claim.contactName, 'Name', 'contactName')
+          | on
+          +dateField(claim.contactDate, 'Date', 'contactDate')
+
+        h2.section-title Recovery
+        +fieldBox('Select one:')
+          +radioOption('rec_notfull', 'recovery', 'rec_notfull', 'I have not fully recovered from my workplace injury.', claim.recovery === 'rec_notfull')
+          +radioOption('rec_full', 'recovery', 'rec_full', 'I have fully recovered from my workplace injury.', claim.recovery === 'rec_full')
+
+        +textBox('I have provided the following comments about my recovery:', claim.recoveryComments, 'recoveryComments')
+
+        +docFooter(claim.workerAppId, claim.submitted, `Page 1 of ${totalPages}`)
+
+      //- ============================= SHEET 2 =============================
+      section.sheet
+        +docHeader('Worker Progress Report', claim.claimNo, 'WP')
+
+        +labeledBox('I rate my current pain/discomfort on a scale of 1–10, where 1 is no pain and 10 is severe pain.')
+          +painScale(claim.pain)
+
+        +fieldBox('Select one:')
+          +radioOption('med_no', 'medtreat', 'med_no', 'I am not continuing to receive medical treatment for my workplace injury.', claim.medtreat === 'med_no')
+          +radioOption('med_yes', 'medtreat', 'med_yes', 'I am continuing to receive medical treatment for my workplace injury from:', claim.medtreat === 'med_yes', { type: 'text', name: 'medProviderType', value: claim.medProviderType, placeholder: 'Medical Provider Type', width: '200px' })
+
+        .plain-line(style="flex-direction:column;align-items:flex-start;gap:4px;")
+          div My last medical treatment was from
+          div(style="display:flex;gap:16px;flex-wrap:wrap;")
+            +dateField(claim.lastTreatDate, 'Date', 'lastTreatDate')
+            +textField(claim.lastTreatName, 'Medical Provider Name', 'lastTreatName')
+
+        .plain-line(style="flex-direction:column;align-items:flex-start;gap:4px;")
+          div My next medical treatment is from
+          div(style="display:flex;gap:16px;flex-wrap:wrap;")
+            +dateField(claim.nextTreatDate, 'Date', 'nextTreatDate')
+            +textField(claim.nextTreatName, 'Medical Provider Name', 'nextTreatName')
+
+        .plain-line
+          | I am attending a Chiropractor or Physiotherapist
+          +textField(claim.chiroFrequency, null, 'chiroFrequency')
+
+        +fieldBox('Select one:')
+          +radioOption('ex_no', 'exercise', 'ex_no', 'I am not doing home exercises for my workplace injury.', claim.exercise === 'ex_no')
+          +radioOption('ex_yes', 'exercise', 'ex_yes', 'I am doing home exercises for my workplace injury.', claim.exercise === 'ex_yes')
+
+        +textBox('List the exercises you are doing:', claim.exerciseList, 'exerciseList', true)
+
+        h2.section-title Other Information
+        +textBox('I would like to provide the following additional information about my claim/injury:', claim.otherInfo, 'otherInfo')
+
+        +docFooter(claim.workerAppId, claim.submitted, `Page 2 of ${totalPages}`)
+
+      //- ============================= SHEET 3 =============================
+      section.sheet
+        +docHeader('Worker Progress Report', claim.claimNo, 'WP')
+
+        +fieldBox('Select one:')
+          +radioOption('rx_no', 'medication', 'rx_no', 'I am not taking medication for my workplace injury.', claim.medication === 'rx_no')
+          +radioOption('rx_yes', 'medication', 'rx_yes', 'I am taking medication for my workplace injury:', claim.medication === 'rx_yes', { type: 'text', name: 'medicationName', value: claim.medicationName, placeholder: 'Name of prescribed medication', width: '220px' })
+
+        p.certify-text
+          | I certify that the information given on this form is true, correct and complete to the best of my
+          | knowledge. I agree to notify the Workers Compensation Board of Manitoba (WCB) immediately once I
+          | return to any form of work and/or employment. I understand that it is an offence to knowingly make
+          | a false statement to the WCB. I also understand that it is an offence to withhold information from
+          | WCB which affects my entitlement to compensation (e.g., full or partial recovery from injury, ability
+          | to return to work, sources of additional income, etc.). I understand that refusing to co-operate with,
+          | or follow my treatment, may result in the WCB reducing or suspending my benefits.
+
+        +privacyRow(claim.privacyAck)
+
+        +docFooter(claim.workerAppId, claim.submitted, `Page 3 of ${totalPages}`)

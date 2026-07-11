@@ -1,0 +1,240 @@
+//- ================================================================
+//- mixins.pug
+//- Reusable building blocks shared by worker-progress.pug and
+//- medical-travel.pug. Every visual pattern that repeats more than
+//- once anywhere in either form lives here exactly once.
+//-
+//- IMPORTANT: this whole app is a read-only, backend-driven demo, so
+//- every input below is rendered `disabled` on purpose - the person
+//- viewing the page is never meant to type into it, only see the
+//- values the (simulated) backend returned.
+//- ================================================================
+
+//- ---------------------------------------------------------------
+//- Letterhead + title block. Used at the top of every printed page
+//- (5 times total across the two forms).
+//- tagText is optional (e.g. the "WP" badge on the Progress Report).
+//- ---------------------------------------------------------------
+mixin docHeader(title, claimNo, tagText)
+  .doc-header
+    .brand
+      img(src="/img/logo.svg" alt="Workers Compensation Board of Manitoba logo")
+      .brand-address
+        | 333 Broadway
+        br
+        | Winnipeg, MB R3C 4W3
+        br
+        | Phone: (204) 954-4321
+        br
+        | Toll Free: 1-855-954-4321
+        br
+        | wcb.mb.ca
+    .doc-title-block
+      h1= title
+      .claim-row
+        .claim-box
+          | Claim No.
+          strong= ' ' + claimNo
+        if tagText
+          .claim-box.tag= tagText
+
+//- ---------------------------------------------------------------
+//- Footer. Kept in normal document flow (not position:absolute) so
+//- it always lands right after whatever content precedes it,
+//- however tall that content is for a given data set - this is
+//- what keeps the footer from overlapping table rows when Sample B
+//- (more rows) is loaded instead of Sample A. See README for detail.
+//- ---------------------------------------------------------------
+mixin docFooter(workerAppId, submitted, pageLabel)
+  .doc-footer
+    div
+      span.worker-app-id-value= workerAppId
+      |  (Worker App ID)
+    .footer-right
+      | Submitted:
+      span.submitted-value= ' ' + submitted
+      span.page-num= pageLabel
+
+//- ---------------------------------------------------------------
+//- Generic bordered box with a label on top and arbitrary content
+//- below (used directly by the pain-scale block, and wrapped by
+//- +fieldBox below for the more common radio-options case).
+//- ---------------------------------------------------------------
+mixin labeledBox(label)
+  .field-box
+    .box-label= label
+    block
+
+//- ---------------------------------------------------------------
+//- A bordered "choose one" group. Caller supplies the box label and
+//- fills the body with one or more +radioOption calls via a block.
+//- ---------------------------------------------------------------
+mixin fieldBox(label)
+  +labeledBox(label)
+    .option-row
+      block
+
+//- ---------------------------------------------------------------
+//- One radio option inside a fieldBox, with an optional "reveal"
+//- companion field (e.g. "I returned to work on: <date>"). Checked
+//- options reflect the current backend value, and reveal fields are
+//- bound to their own input names so the user can edit them.
+//- reveal = { type: 'date' | 'text', name, value, placeholder, caption }
+//- ---------------------------------------------------------------
+mixin radioOption(id, name, value, optionLabel, checked, reveal)
+  span.option
+    input(type="radio" id=id name=name value=value checked=checked)
+    label(for=id)= optionLabel
+    if reveal
+      span.underline-field-wrap
+        if reveal.type === 'date'
+          input.inline-input(type="date" name=reveal.name value=reveal.value)
+        else
+          input.inline-input(type="text" name=reveal.name value=reveal.value placeholder=reveal.placeholder style=(reveal.width ? `min-width:${reveal.width}` : null))
+        span.field-caption= reveal.caption || (reveal.type === 'date' ? 'Date' : '')
+
+//- ---------------------------------------------------------------
+//- Free-text comment box with a label above it (used 4 times on the
+//- Progress Report: rtwGoing, rtwConcerns, recoveryComments,
+//- exerciseList, otherInfo).
+//- ---------------------------------------------------------------
+mixin textBox(label, value, name, small)
+  .textbox(class=small ? 'small' : null)
+    span.placeholder-label= label
+    textarea(name=name)= value
+
+//- ---------------------------------------------------------------
+//- A single underlined date field with a small caption underneath,
+//- used for the several "on: ___ (Date)" prompts outside of a
+//- fieldBox/radio context.
+//- ---------------------------------------------------------------
+mixin dateField(value, caption, name)
+  span.underline-field-wrap
+    input.fill-line(type="date" name=name value=value)
+    span.cap= caption || 'Date'
+
+//- ---------------------------------------------------------------
+//- A single underlined text field with a small caption underneath.
+//- ---------------------------------------------------------------
+mixin textField(value, caption, name, extraStyle)
+  span.underline-field-wrap
+    input.fill-line(type="text" name=name value=value style=extraStyle)
+    if caption
+      span.cap= caption
+
+//- ---------------------------------------------------------------
+//- The 1-10 pain scale. Generated from a loop (server-side) instead
+//- of 10 hand-written radio buttons, and driven entirely by the
+//- `selected` value from the backend record.
+//- ---------------------------------------------------------------
+mixin painScale(selected)
+  .pain-scale
+    - for (var i = 1; i <= 10; i++)
+      span.option
+        input(type="radio" id=`pain_${i}` name="pain" value=i checked=(selected === i))
+        label(for=`pain_${i}`)
+          span.n= i
+
+//- ---------------------------------------------------------------
+//- One full expense table: heading, optional note, the table itself
+//- built from the shared column config, and an optional footnote.
+//- This ONE mixin renders all 6 tables on the Medical & Travel form
+//- (Prescription Drugs, OTC Drugs, Supplies, Parking, Mileage, Fare)
+//- - only the `table` config and `rows` data differ per call.
+//- table = { title, columns:[{field,label,type}], note, footnote }
+//- rows  = array of row objects, keyed by each column's `field`
+//- ---------------------------------------------------------------
+mixin expenseTable(tableConfig, rows)
+  h2.section-title= tableConfig.title
+  if tableConfig.note
+    p.table-block.note= tableConfig.note
+  .table-block
+    table.data-table
+      thead
+        tr
+          each col in tableConfig.columns
+            th= col.label
+      tbody
+        if rows && rows.length
+          each row, rowIndex in rows
+            tr
+              each col in tableConfig.columns
+                td
+                  if col.type === 'date'
+                    input(type='date' name=`rows[${tableConfig.key}][${rowIndex}][${col.field}]` value=row[col.field]||'')
+                  else
+                    input(type='text' name=`rows[${tableConfig.key}][${rowIndex}][${col.field}]` value=row[col.field]||'')
+        else
+          tr
+            each col in tableConfig.columns
+              td
+                if col.type === 'date'
+                  input(type='date' name=`rows[${tableConfig.key}][0][${col.field}]` value='')
+                else
+                  input(type='text' name=`rows[${tableConfig.key}][0][${col.field}]` value='')
+
+//- ---------------------------------------------------------------
+//- Privacy acknowledgement line, used on the last page of both forms.
+//- ---------------------------------------------------------------
+mixin privacyRow(checked)
+  .privacy-row
+    input(type="checkbox" id="privacyAck" name="privacyAck" checked=checked)
+    label(for="privacyAck")
+      | I understand that the
+      |  
+      a(href="#" onclick="return false;") Privacy Notice
+      |  applies to the personal information collected in this document.
+
+//- ---------------------------------------------------------------
+//- The 1-10 pain scale. Generated from a loop (server-side) instead
+//- of 10 hand-written radio buttons, and driven entirely by the
+//- `selected` value from the backend record.
+//- ---------------------------------------------------------------
+mixin painScale(selected)
+  .pain-scale
+    - for (var i = 1; i <= 10; i++)
+      span.option
+        input(type="radio" id=`pain_${i}` name="pain" checked=(selected === i) disabled)
+        label(for=`pain_${i}`)
+          span.n= i
+
+//- ---------------------------------------------------------------
+//- One full expense table: heading, optional note, the table itself
+//- built from the shared column config, and an optional footnote.
+//- This ONE mixin renders all 6 tables on the Medical & Travel form
+//- (Prescription Drugs, OTC Drugs, Supplies, Parking, Mileage, Fare)
+//- - only the `table` config and `rows` data differ per call.
+//- table = { title, columns:[{field,label,type}], note, footnote }
+//- rows  = array of row objects, keyed by each column's `field`
+//- ---------------------------------------------------------------
+mixin expenseTable(tableConfig, rows)
+  h2.section-title= tableConfig.title
+  if tableConfig.note
+    p.table-block.note= tableConfig.note
+  .table-block
+    table.data-table
+      thead
+        tr
+          each col in tableConfig.columns
+            th= col.label
+      tbody
+        if rows && rows.length
+          each row in rows
+            tr
+              each col in tableConfig.columns
+                td= formatCell(row[col.field], col.type)
+        else
+          tr.empty-row
+            td(colspan=tableConfig.columns.length) No entries added
+
+//- ---------------------------------------------------------------
+//- Privacy acknowledgement line, used on the last page of both forms.
+//- ---------------------------------------------------------------
+mixin privacyRow(checked)
+  .privacy-row
+    input(type="checkbox" checked=checked disabled)
+    label
+      | I understand that the
+      |  
+      a(href="#" onclick="return false;") Privacy Notice
+      |  applies to the personal information collected in this document.

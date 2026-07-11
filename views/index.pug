@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  .landing-wrap
+    h1 WCB Form Replication — Assignment 2
+    p.sub
+      | Server-rendered with Pug. Every field is populated from a simulated
+      | backend record — there is no data entry on screen. Use the toolbar
+      | on each form to switch between two different backend records and
+      | to print a standard A4 PDF.
+
+    a.card(href="/worker-progress?sample=A")
+      .title Worker Progress Report →
+      .desc 3-page form · return-to-work & recovery details · driven entirely by backend data
+
+    a.card(href="/medical-travel?sample=A")
+      .title Medical & Travel Expense Request →
+      .desc 2-page form · 6 expense tables rendered from one reusable mixin · row counts vary by record

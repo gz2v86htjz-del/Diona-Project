@@ -1,0 +1,21 @@
+{
+  "name": "wcb-forms-pug",
+  "version": "2.0.0",
+  "description": "Assignment 2 - WCB forms rendered server-side with Pug, backed by simulated backend data",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pug": "^3.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "license": "MIT"
+}
