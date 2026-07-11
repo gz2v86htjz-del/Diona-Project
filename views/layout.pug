@@ -29,12 +29,7 @@ html(lang="en")
             a.sample-btn(href=`${samplePath}?sample=A` class=activeSample === 'A' ? 'active' : null) Sample A
             a.sample-btn(href=`${samplePath}?sample=B` class=activeSample === 'B' ? 'active' : null) Sample B
 
-        if formId
-          button#saveBtn.primary(type="submit" form=formId) Save
         button#printBtn.primary(type="button") Print / Save as PDF
-
-      if saved
-        .save-message Saved successfully. You can now print or continue editing.
 
     block content
 

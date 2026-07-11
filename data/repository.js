@@ -44,50 +44,8 @@ function getMedicalTravelRecord(sampleKey) {
   return { key, data: medicalTravelRecords[key] };
 }
 
-function saveWorkerProgressRecord(sampleKey, updatedData) {
-  const key = SAMPLE_KEYS.includes(sampleKey) ? sampleKey : 'A';
-  const { sample, ...fields } = updatedData;
-  const record = {
-    ...workerProgressRecords[key],
-    ...fields,
-    privacyAck: fields.privacyAck === 'on' || fields.privacyAck === true,
-  };
-  workerProgressRecords[key] = record;
-  fs.writeFileSync(path.join(__dirname, 'worker-progress.json'), JSON.stringify(workerProgressRecords, null, 2), 'utf-8');
-  return { key, data: record };
-}
-
-function saveMedicalTravelRecord(sampleKey, updatedData) {
-  const key = SAMPLE_KEYS.includes(sampleKey) ? sampleKey : 'A';
-  const { sample, rows = {}, ...fields } = updatedData;
-  const sanitizedRows = {};
-
-  Object.keys(medicalTravelRecords[key].rows).forEach((tableKey) => {
-    const incoming = rows[tableKey];
-    if (!Array.isArray(incoming)) {
-      sanitizedRows[tableKey] = [];
-      return;
-    }
-    sanitizedRows[tableKey] = incoming.filter((row) =>
-      Object.values(row || {}).some((value) => value !== '' && value !== null && value !== undefined)
-    );
-  });
-
-  const record = {
-    ...medicalTravelRecords[key],
-    ...fields,
-    privacyAck: fields.privacyAck === 'on' || fields.privacyAck === true,
-    rows: sanitizedRows,
-  };
-  medicalTravelRecords[key] = record;
-  fs.writeFileSync(path.join(__dirname, 'medical-travel.json'), JSON.stringify(medicalTravelRecords, null, 2), 'utf-8');
-  return { key, data: record };
-}
-
 module.exports = {
   SAMPLE_KEYS,
   getWorkerProgressRecord,
   getMedicalTravelRecord,
-  saveWorkerProgressRecord,
-  saveMedicalTravelRecord,
 };

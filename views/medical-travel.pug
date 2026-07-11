@@ -6,29 +6,27 @@ include mixins/mixins.pug
 //- shared EXPENSE_TABLES config for this page.
 
 block content
-  form#claimForm(action="/medical-travel/save" method="post")
-    input(type="hidden" name="sample" value=activeSample)
-    .sheet-stack
+  .sheet-stack
 
-      //- ============================= SHEET 1 =============================
-      section.sheet
-        +docHeader('Medical & Travel Expense Request', claim.claimNo)
+    //- ============================= SHEET 1 =============================
+    section.sheet
+      +docHeader('Medical & Travel Expense Request', claim.claimNo)
 
-        p.intro-line
-          span.worker-name= claim.workerName
-          |  requested reimbursement for the following medical and/or travel expenses:
+      p.intro-line
+        span.worker-name= claim.workerName
+        |  requested reimbursement for the following medical and/or travel expenses:
 
-        each table in page1Tables
-          +expenseTable(table, claim.rows[table.key])
+      each table in page1Tables
+        +expenseTable(table, claim.rows[table.key])
 
-        +docFooter(claim.workerAppId, claim.submitted, `Page 1 of ${totalPages}`)
+      +docFooter(claim.workerAppId, claim.submitted, `Page 1 of ${totalPages}`)
 
-      //- ============================= SHEET 2 =============================
-      section.sheet
-        each table in page2Tables
-          +expenseTable(table, claim.rows[table.key])
+    //- ============================= SHEET 2 =============================
+    section.sheet
+      each table in page2Tables
+        +expenseTable(table, claim.rows[table.key])
 
-        hr(style="border:none;border-top:1px solid #ccc;margin:24px 0 14px;")
-        +privacyRow(claim.privacyAck)
+      hr(style="border:none;border-top:1px solid #ccc;margin:24px 0 14px;")
+      +privacyRow(claim.privacyAck)
 
-        +docFooter(claim.workerAppId, claim.submitted, `Page 2 of ${totalPages}`)
+      +docFooter(claim.workerAppId, claim.submitted, `Page 2 of ${totalPages}`)

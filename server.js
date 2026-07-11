@@ -22,8 +22,6 @@ const { formatDate, formatCell } = require('./utils/format');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(express.urlencoded({ extended: true }));
-
 // ---- View engine ----
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -60,8 +58,6 @@ app.get('/worker-progress', (req, res) => {
     activeSample: key,
     claim: data,
     totalPages: 3,
-    formId: 'claimForm',
-    saved: req.query.saved === '1',
   });
 });
 
@@ -87,21 +83,7 @@ app.get('/medical-travel', (req, res) => {
     page1Tables,
     page2Tables,
     totalPages: 2,
-    formId: 'claimForm',
-    saved: req.query.saved === '1',
   });
-});
-
-app.post('/worker-progress/save', (req, res) => {
-  const sample = req.body.sample || 'A';
-  const { key } = repository.saveWorkerProgressRecord(sample, req.body);
-  res.redirect(`/worker-progress?sample=${key}&saved=1`);
-});
-
-app.post('/medical-travel/save', (req, res) => {
-  const sample = req.body.sample || 'A';
-  const { key } = repository.saveMedicalTravelRecord(sample, req.body);
-  res.redirect(`/medical-travel?sample=${key}&saved=1`);
 });
 
 app.listen(PORT, () => {

@@ -76,21 +76,22 @@ mixin fieldBox(label)
 
 //- ---------------------------------------------------------------
 //- One radio option inside a fieldBox, with an optional "reveal"
-//- companion field (e.g. "I returned to work on: <date>"). Checked
-//- options reflect the current backend value, and reveal fields are
-//- bound to their own input names so the user can edit them.
-//- reveal = { type: 'date' | 'text', name, value, placeholder, caption }
+//- companion field (e.g. "I returned to work on: <date>"). Since
+//- this is a read-only display, checked options simply render with
+//- their reveal value already filled in - there is nothing to
+//- toggle interactively.
+//- reveal = { type: 'date' | 'text', value, placeholder, caption }
 //- ---------------------------------------------------------------
-mixin radioOption(id, name, value, optionLabel, checked, reveal)
+mixin radioOption(id, name, optionLabel, checked, reveal)
   span.option
-    input(type="radio" id=id name=name value=value checked=checked)
+    input(type="radio" id=id name=name checked=checked disabled)
     label(for=id)= optionLabel
     if reveal
       span.underline-field-wrap
         if reveal.type === 'date'
-          input.inline-input(type="date" name=reveal.name value=reveal.value)
+          input.inline-input(type="date" value=reveal.value disabled)
         else
-          input.inline-input(type="text" name=reveal.name value=reveal.value placeholder=reveal.placeholder style=(reveal.width ? `min-width:${reveal.width}` : null))
+          input.inline-input(type="text" value=reveal.value placeholder=reveal.placeholder disabled style=(reveal.width ? `min-width:${reveal.width}` : null))
         span.field-caption= reveal.caption || (reveal.type === 'date' ? 'Date' : '')
 
 //- ---------------------------------------------------------------
@@ -98,92 +99,29 @@ mixin radioOption(id, name, value, optionLabel, checked, reveal)
 //- Progress Report: rtwGoing, rtwConcerns, recoveryComments,
 //- exerciseList, otherInfo).
 //- ---------------------------------------------------------------
-mixin textBox(label, value, name, small)
+mixin textBox(label, value, small)
   .textbox(class=small ? 'small' : null)
     span.placeholder-label= label
-    textarea(name=name)= value
+    textarea(disabled)= value
 
 //- ---------------------------------------------------------------
 //- A single underlined date field with a small caption underneath,
 //- used for the several "on: ___ (Date)" prompts outside of a
 //- fieldBox/radio context.
 //- ---------------------------------------------------------------
-mixin dateField(value, caption, name)
+mixin dateField(value, caption)
   span.underline-field-wrap
-    input.fill-line(type="date" name=name value=value)
+    input.fill-line(type="date" value=value disabled)
     span.cap= caption || 'Date'
 
 //- ---------------------------------------------------------------
 //- A single underlined text field with a small caption underneath.
 //- ---------------------------------------------------------------
-mixin textField(value, caption, name, extraStyle)
+mixin textField(value, caption, extraStyle)
   span.underline-field-wrap
-    input.fill-line(type="text" name=name value=value style=extraStyle)
+    input.fill-line(type="text" value=value disabled style=extraStyle)
     if caption
       span.cap= caption
-
-//- ---------------------------------------------------------------
-//- The 1-10 pain scale. Generated from a loop (server-side) instead
-//- of 10 hand-written radio buttons, and driven entirely by the
-//- `selected` value from the backend record.
-//- ---------------------------------------------------------------
-mixin painScale(selected)
-  .pain-scale
-    - for (var i = 1; i <= 10; i++)
-      span.option
-        input(type="radio" id=`pain_${i}` name="pain" value=i checked=(selected === i))
-        label(for=`pain_${i}`)
-          span.n= i
-
-//- ---------------------------------------------------------------
-//- One full expense table: heading, optional note, the table itself
-//- built from the shared column config, and an optional footnote.
-//- This ONE mixin renders all 6 tables on the Medical & Travel form
-//- (Prescription Drugs, OTC Drugs, Supplies, Parking, Mileage, Fare)
-//- - only the `table` config and `rows` data differ per call.
-//- table = { title, columns:[{field,label,type}], note, footnote }
-//- rows  = array of row objects, keyed by each column's `field`
-//- ---------------------------------------------------------------
-mixin expenseTable(tableConfig, rows)
-  h2.section-title= tableConfig.title
-  if tableConfig.note
-    p.table-block.note= tableConfig.note
-  .table-block
-    table.data-table
-      thead
-        tr
-          each col in tableConfig.columns
-            th= col.label
-      tbody
-        if rows && rows.length
-          each row, rowIndex in rows
-            tr
-              each col in tableConfig.columns
-                td
-                  if col.type === 'date'
-                    input(type='date' name=`rows[${tableConfig.key}][${rowIndex}][${col.field}]` value=row[col.field]||'')
-                  else
-                    input(type='text' name=`rows[${tableConfig.key}][${rowIndex}][${col.field}]` value=row[col.field]||'')
-        else
-          tr
-            each col in tableConfig.columns
-              td
-                if col.type === 'date'
-                  input(type='date' name=`rows[${tableConfig.key}][0][${col.field}]` value='')
-                else
-                  input(type='text' name=`rows[${tableConfig.key}][0][${col.field}]` value='')
-
-//- ---------------------------------------------------------------
-//- Privacy acknowledgement line, used on the last page of both forms.
-//- ---------------------------------------------------------------
-mixin privacyRow(checked)
-  .privacy-row
-    input(type="checkbox" id="privacyAck" name="privacyAck" checked=checked)
-    label(for="privacyAck")
-      | I understand that the
-      |  
-      a(href="#" onclick="return false;") Privacy Notice
-      |  applies to the personal information collected in this document.
 
 //- ---------------------------------------------------------------
 //- The 1-10 pain scale. Generated from a loop (server-side) instead
