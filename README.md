@@ -278,17 +278,3 @@ so individual rows/boxes never get sliced in half across a page boundary.
 
 ---
 
-## What to cover in the demo video
-
-- Quick tour of the two forms with **Sample A** loaded (matches the
-  source PDFs).
-- Switch to **Sample B** on both forms — point out the different
-  worker/claim, the empty OTC Drugs table, and the longer tables.
-- Print (Ctrl/Cmd+P → Save as PDF, A4) both samples of the Medical &
-  Travel form back to back, showing the footer never overlaps content
-  even though Sample B has far more rows.
-- Code walkthrough: `server.js` → `data/repository.js` → `views/*.pug`
-  → `views/mixins/mixins.pug`, emphasizing the `expenseTable` mixin and
-  `config/expense-tables.js` as the reuse story.
-- Mention the assumptions/challenges above.
-- Link this repo on GitHub.
